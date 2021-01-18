@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 
+const Sequelize = require('sequelize');
+const dbConfig = require('./config/database.config');
+
 const PORT = 3003;
 
 // Config Body-parser
@@ -19,6 +22,20 @@ app.use(morgan('dev'));
 // however for the sake of time (and my sanity) i am going to use it in this 'test' app
 app.use(cors());
 
+// DB 
+// NOTE (@charkops): Move this to its own module
+const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+  host: dbConfig.HOST,
+  port: dbConfig.PORT,
+  dialect: dbConfig.DIALECT
+});
+sequelize.sync({
+  force: true
+}).then(() => {
+  console.log('Successfully Synced to DB');
+}).catch((error) => {
+  console.log('Could not connect to DB');
+});
 
 // Server
 app.listen(PORT, () => {
