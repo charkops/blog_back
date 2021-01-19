@@ -3,8 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 
-const Sequelize = require('sequelize');
-const dbConfig = require('./config/database.config');
+const db = require('./controllers/db.controller');
 
 const PORT = 3003;
 
@@ -24,17 +23,25 @@ app.use(cors());
 
 // DB 
 // NOTE (@charkops): Move this to its own module
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  port: dbConfig.PORT,
-  dialect: dbConfig.DIALECT
-});
-sequelize.sync({
-  force: true
-}).then(() => {
-  console.log('Successfully Synced to DB');
-}).catch((error) => {
+// const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+//   host: dbConfig.HOST,
+//   port: dbConfig.PORT,
+//   dialect: dbConfig.DIALECT
+// });
+// sequelize.sync({
+//   force: true
+// }).then(() => {
+//   console.log('Successfully Synced to DB');
+// }).catch((error) => {
+//   console.log('Could not connect to DB');
+// });
+db.sync(false)
+.then(() => {
+  console.log('DB synced successfully');
+})
+.catch((err) => {
   console.log('Could not connect to DB');
+  console.log(err);
 });
 
 // Routes

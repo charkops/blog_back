@@ -1,4 +1,4 @@
-
+const jwtcontroller = require('../controllers/jwt.controller');
 
 module.exports = (app) => {
   app.get('/users', (req, res) => {
@@ -7,9 +7,5 @@ module.exports = (app) => {
     });
   });
 
-  app.post('/users/authenticate', (req, res) => {
-    res.status(404).send({
-      message: 'You done goofed'
-    });
-  });
+  app.post('/users/login', jwtcontroller.login);
 };
