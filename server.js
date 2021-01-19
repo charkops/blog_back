@@ -37,6 +37,9 @@ sequelize.sync({
   console.log('Could not connect to DB');
 });
 
+// Routes
+require('./routes/routes.js')(app);
+
 // Server
 app.listen(PORT, () => {
   console.log(`Server is listening on port: ${PORT}`);
