@@ -1,6 +1,14 @@
 const jwt = require('jsonwebtoken');
 const db = require('../controllers/db.controller');
 const Users = require('../models/Users.model.js')(db.sequelize, db.Sequelize);
+const jwtConfig = require('../config/jwt.config');
+
+// NOTE (@charkops): Should we export this also ?
+function generateJWT(key) {
+  return jwt.sign({ key }, jwtConfig.SECRET_KEY, {
+    expiresIn: 3600 // 1h
+  });
+};
 
 // If login is successfull, we should return a user object
 // With the email and the jwt token attached
@@ -31,8 +39,16 @@ exports.login = (req, res) => {
       // There shouldn't be more than 1 user with the same email
       // Cause we specify the unique email in registration (well, we don't but we should have if we did implement registration)
       if (user.password == password) {
+        const token = generateJWT(email);
+        const user_id = user.user_id;
+        const blog_id = user.blog_id;
+        const name = user.name;
         res.status(200).send({
-          message: 'Success'
+          user_id,
+          name,
+          email,
+          blog_id,
+          token,
         });
         return;
       } else {
