@@ -13,4 +13,7 @@ module.exports = (app) => {
   app.get('/blogs/:blog_id', dbcontroller.getBlog);
 
   app.post('/categories', dbcontroller.getCategories);
+
+  // Get all post belonging to a specific category
+  app.get('/posts/:category_id', dbcontroller.getPostsFromCategory);
 };

@@ -50,3 +50,52 @@ exports.getCategories = (req, res) => {
     return;
   });
 };
+
+function grabPost(post_id) {
+  return db.Posts.findOne({
+    where: {
+      post_id
+    }
+  });
+}
+
+// NOTE (@charkops, @SGA): I apologize in advance for this code mess,
+// got a bit frustrated with errors so i had to result in this async - await hell :-(
+// I promise i clean up when i get the time :)
+exports.getPostsFromCategory = async (req, res) => {
+  // Is the user authorized for this ?
+
+  let posts = [];
+
+  // Get the category id, then get every post_id belonging to this specific category_id
+  // Get said post from db, put it in an array ('posts') and send it back
+  const category_id = req.params.category_id;
+  await db.CategoryPosts.findAll({
+    where: { category_id }
+  }).then(async catposts => {
+    for (let catpost of catposts) {
+      const post_id = catpost.post_id;
+      await grabPost(post_id)
+      .then(post => {
+        posts.push(post);
+      }).catch(err => {
+        res.send({
+          message: 'An error occured while retrieving posts'
+        });
+        return;
+      })
+    }
+  }).catch(err => {
+    console.log('An error occured while retrieving posts (category_id)');
+    res.send({
+      message: 'An error occured while retrieving posts (category_id)'
+    })
+    return;
+  })
+
+  res.send({
+    posts
+  })
+  return;
+
+};
