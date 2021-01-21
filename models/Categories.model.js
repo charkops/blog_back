@@ -1,7 +1,7 @@
 
 module.exports = (sequelize, Sequelize) => {
-  const Blogs = sequelize.define('blogs', {
-    blog_id: {
+  const Categories = sequelize.define('categories', {
+    category_id: {
       type: Sequelize.INTEGER,
       allowNull: false,
       autoIncrement: true,
@@ -9,7 +9,11 @@ module.exports = (sequelize, Sequelize) => {
     },
     title: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: false
+    },
+    blog_id: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -20,6 +24,6 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: Sequelize.NOW
     }
   });
-  
-  return Blogs;
-}
+
+  return Categories;
+};
