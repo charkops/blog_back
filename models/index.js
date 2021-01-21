@@ -18,4 +18,12 @@ db.sync = (forceSync) => {
   })
 };
 
+db.Users = require('./Users.model')(sequelize, Sequelize);
+db.Blogs = require('./Blogs.model')(sequelize, Sequelize);
+
+db.Blogs.hasOne(db.Users, {
+  foreignKey: 'blog_id'
+});
+db.Users.belongsTo(db.Blogs);
+
 module.exports = db;

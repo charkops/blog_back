@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 
-const db = require('./controllers/db.controller');
+const db = require('./models');
 
 const PORT = 3003;
 

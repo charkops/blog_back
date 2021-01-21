@@ -1,5 +1,5 @@
 
-modeule.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, Sequelize) => {
   const Blogs = sequelize.define('blogs', {
     blog_id: {
       type: Sequelize.INTEGER,

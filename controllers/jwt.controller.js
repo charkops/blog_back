@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const db = require('../controllers/db.controller');
-const Users = require('../models/Users.model.js')(db.sequelize, db.Sequelize);
+const db = require('../models');
 const jwtConfig = require('../config/jwt.config');
 
 // NOTE (@charkops): Should we export this also ?
@@ -29,11 +28,10 @@ exports.login = (req, res) => {
     });
     return;
   }
-
   // Chech if a user exists with the given email,
   // and if it does check for password match
   // We sequelize.escape() to make sure no SQL Injection happens on our watch
-  db.sequelize.query('select * from users where email = ' + db.sequelize.escape(email), { model: Users })
+  db.sequelize.query('select * from users where email = ' + db.sequelize.escape(email), { model: db.Users })
   .then(users => {
     for (let user of users) {
       // There shouldn't be more than 1 user with the same email
