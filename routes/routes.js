@@ -11,5 +11,6 @@ module.exports = (app) => {
   app.post('/users/login', jwtcontroller.login);
 
   app.get('/blogs/:blog_id', dbcontroller.getBlog);
-  app.get('/categories', dbcontroller.getCategories);
+
+  app.post('/categories', dbcontroller.getCategories);
 };
