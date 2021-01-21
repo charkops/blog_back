@@ -22,7 +22,8 @@ db.Users = require('./Users.model')(sequelize, Sequelize);
 db.Blogs = require('./Blogs.model')(sequelize, Sequelize);
 db.Categories = require('./Categories.model')(sequelize, Sequelize);
 
-// Define 1 - 1 relationsship between users - blogs
+
+// Define 1 - 1 relationship between users - blogs
 db.Blogs.hasOne(db.Users, {
   foreignKey: 'blog_id'
 });
@@ -32,7 +33,6 @@ db.Users.belongsTo(db.Blogs);
 db.Blogs.hasMany(db.Categories, {
   foreignKey: 'blog_id'
 });
-db.Categories.belongsTo(db.Blogs);
 
 
 module.exports = db;
