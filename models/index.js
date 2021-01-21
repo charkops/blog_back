@@ -21,6 +21,7 @@ db.sync = (forceSync) => {
 db.Users = require('./Users.model')(sequelize, Sequelize);
 db.Blogs = require('./Blogs.model')(sequelize, Sequelize);
 db.Categories = require('./Categories.model')(sequelize, Sequelize);
+db.Posts = require('./Posts.model')(sequelize, Sequelize);
 
 
 // Define 1 - 1 relationship between users - blogs
