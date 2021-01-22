@@ -97,5 +97,34 @@ exports.getPostsFromCategory = async (req, res) => {
     posts
   })
   return;
+};
 
+// Return a single post from db
+exports.getPost = (req, res) => {
+
+  // Is user authorized for this operation ?
+
+
+  // For now he is
+  const post_id = req.params.post_id;
+  if (!post_id) {
+    res.status(400).send({
+      message: 'No post_id provided'
+    });
+    return;
+  }
+
+  grabPost(post_id)
+  .then(post => {
+    res.send({ post });
+    return;
+  })
+  .catch(err => {
+    console.log('An error occured while retrieving post');
+    console.log(err);
+    res.status(500).send({
+      message: 'An error occured while retrieving post'
+    });
+    return;
+  });
 };
