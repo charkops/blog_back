@@ -15,7 +15,9 @@ module.exports = (app) => {
   app.post('/categories', dbcontroller.getCategories);
 
   // Get all post belonging to a specific category
-  // app.get('/posts/:category_id', dbcontroller.getPostsFromCategory);
+  // Standalone getter
+  // NOTE (@charkops): Check up on REST best practices, this doesn't feel right
+  app.get('/postsFromCategory/:category_id', dbcontroller.getPostsFromCategory);
 
   app.get('/posts/:post_id', dbcontroller.getPost);
 };
