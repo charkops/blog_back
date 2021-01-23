@@ -20,4 +20,6 @@ module.exports = (app) => {
   app.get('/postsFromCategory/:category_id', dbcontroller.getPostsFromCategory);
 
   app.get('/posts/:post_id', dbcontroller.getPost);
+
+  app.get('/posts/all/:blog_id', dbcontroller.getAllPosts);
 };

@@ -21,7 +21,16 @@ exports.getBlog = (req, res) => {
   })
 };
 
+function grabCategories(blog_id) {
+  return db.Categories.findAll({
+    where: {
+      blog_id
+    }
+  });
+}
+
 // Return all categories belonging to one blog
+// NOTE (@charkops): Refactor using grabCategories
 exports.getCategories = (req, res) => {
   // Is user authorized for this req ?
 
@@ -127,4 +136,60 @@ exports.getPost = (req, res) => {
     });
     return;
   });
+};
+
+// Returns all posts from a blog
+// NOTE (@charkops): Refactor this, as well as getPostsFromCategory to use the same function
+exports.getAllPosts = async (req, res) => {
+  // Is user authorized for this req ?
+
+  // For now he is
+  const blog_id = req.params.blog_id;
+  if (!blog_id) {
+    res.status(400).send({
+      message: 'No blog_id provided'
+    });
+    return;
+  }
+
+  // Get all categories for blog_id
+  grabCategories(blog_id)
+  .then(async categories => { 
+    // For each category get posts belonging to that category
+    let posts = [];
+    for (let category of categories) {
+      const category_id = category.category_id;
+      
+      await db.CategoryPosts.findAll({
+        where: { category_id }
+      }).then(async catposts => {
+        for (let catpost of catposts) {
+          const post_id = catpost.post_id;
+          await grabPost(post_id)
+          .then(post => {
+            posts.push(post);
+          })
+        }
+      }).catch(err => {
+        res.send({
+          message: 'An error occured while retrieving posts (getAllPosts)'
+        })
+        return;
+      });
+    }
+
+    res.send({
+      posts
+    })
+    return;
+  })
+  .catch(err => {
+    console.log('Something went wrong when retrieving categories')
+    console.log(err);
+    res.status(500).send({
+      message: 'An error occured while retrieving categories from db (getAllPosts)'
+    });
+    return;
+  })
+
 };
