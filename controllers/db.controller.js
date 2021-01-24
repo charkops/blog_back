@@ -279,3 +279,65 @@ exports.createPost = (req, res) => {
     }
   });
 };
+
+// Deletes a post
+exports.deletePost = (req, res) => {
+
+  // Is user authorized for this req ?
+
+  // For now he is 
+
+  // Get post_id from params
+  const post_id = req.params.post_id;
+  console.log(req.params)
+  if (!post_id) {
+    res.status(404).send({
+      message: 'No post_id found in params'
+    });
+    return;  
+  }
+
+  // Get category_id from params
+  const category_id = req.params.category_id;
+  if (!category_id) {
+    res.status(404).send({
+      message: 'No category_id found in params'
+    });
+    return;
+  }
+
+  db.CategoryPosts.destroy({
+    where: {
+      category_id,
+      post_id
+    }
+  }).then(info => {
+    // Also delete post
+    db.Posts.destroy({
+      where: {
+        post_id
+      }
+    })
+    .then(mess => {
+      res.status(200).send({
+        message: mess | 'ok'
+      });
+      return;
+    })
+    .catch(err => {
+      console.log('An error occured while deleting post (categoriespost)');
+      console.log(err);
+      res.status(500).send({
+        message: 'An error occured while deleting post (categoriespost)'
+      });
+    });
+  })
+  .catch(err => {
+    console.log('An error occured while deleting post');
+    console.log(err);
+    res.status(500).send({
+      message: 'An error occured while deleting post'
+    });
+    return;
+  });
+}
