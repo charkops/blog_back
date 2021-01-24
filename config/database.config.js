@@ -1,8 +1,8 @@
 module.exports = {
   HOST: 'localhost',
-  PORT: 3306,
-  USER: 'charkops',
-  PASSWORD: 'skywalker94',
-  DB: 'blog_schema',
+  PORT: 3309,
+  USER: 'example_user',
+  PASSWORD: 'password',
+  DB: 'db',
   DIALECT: 'mysql'
 };
