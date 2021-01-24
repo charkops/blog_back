@@ -281,7 +281,7 @@ exports.createPost = (req, res) => {
 };
 
 // Deletes a post
-exports.deletePost = (req, res) => {
+exports.deletePost = async (req, res) => {
 
   // Is user authorized for this req ?
 
@@ -297,47 +297,58 @@ exports.deletePost = (req, res) => {
     return;  
   }
 
-  // Get category_id from params
-  const category_id = req.params.category_id;
-  if (!category_id) {
-    res.status(404).send({
-      message: 'No category_id found in params'
-    });
-    return;
-  }
-
-  db.CategoryPosts.destroy({
+  // Find categories this post belongs to
+  let categories_id = [];
+  await db.CategoryPosts.findAll({
     where: {
-      category_id,
       post_id
     }
-  }).then(info => {
-    // Also delete post
-    db.Posts.destroy({
-      where: {
-        post_id
-      }
-    })
-    .then(mess => {
-      res.status(200).send({
-        message: mess | 'ok'
-      });
-      return;
-    })
-    .catch(err => {
-      console.log('An error occured while deleting post (categoriespost)');
-      console.log(err);
-      res.status(500).send({
-        message: 'An error occured while deleting post (categoriespost)'
-      });
-    });
-  })
-  .catch(err => {
-    console.log('An error occured while deleting post');
+  }).then(cateposts => {
+    for (let catpost of cateposts) {
+      categories_id.push(catpost.category_id);
+    }
+  }).catch(err => {
     console.log(err);
     res.status(500).send({
-      message: 'An error occured while deleting post'
+      message: 'Could not delete post'
     });
-    return;
   });
+
+  // For each category, delete post
+  for (let category_id of categories_id) {
+    db.CategoryPosts.destroy({
+      where: {
+        category_id,
+        post_id
+      }
+    }).then(info => {
+      // Also delete post
+      db.Posts.destroy({
+        where: {
+          post_id
+        }
+      })
+      .then(mess => {
+        res.status(200).send({
+          message: mess | 'ok'
+        });
+        return;
+      })
+      .catch(err => {
+        console.log('An error occured while deleting post (categoriespost)');
+        console.log(err);
+        res.status(500).send({
+          message: 'An error occured while deleting post (categoriespost)'
+        });
+      });
+    })
+    .catch(err => {
+      console.log('An error occured while deleting post');
+      console.log(err);
+      res.status(500).send({
+        message: 'An error occured while deleting post'
+      });
+      return;
+    });
+  }
 }

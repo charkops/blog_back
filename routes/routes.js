@@ -25,7 +25,7 @@ module.exports = (app) => {
   // Create new post
   app.post('/posts', dbcontroller.createPost);
   // Delete a post
-  app.delete('/posts/:post_id/:category_id', dbcontroller.deletePost);
+  app.delete('/posts/:post_id', dbcontroller.deletePost);
 
   app.get('/posts/all/:blog_id', dbcontroller.getAllPosts);
 };
