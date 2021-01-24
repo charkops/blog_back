@@ -10,6 +10,8 @@ module.exports = (app) => {
 
   app.post('/users/login', jwtcontroller.login);
 
+  app.post('/users/validate', jwtcontroller.validateUser);
+
   app.get('/blogs/:blog_id', dbcontroller.getBlog);
 
   app.get('/categories/:category_id', dbcontroller.getCategory);  
@@ -28,4 +30,5 @@ module.exports = (app) => {
   app.delete('/posts/:post_id', dbcontroller.deletePost);
 
   app.get('/posts/all/:blog_id', dbcontroller.getAllPosts);
+
 };

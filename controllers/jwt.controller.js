@@ -70,4 +70,39 @@ exports.login = (req, res) => {
     });
     return;
   });
-};  
+};
+
+// Returns true if token is valid,
+// false otherwise
+function verifyToken(token) {
+  const SECRET_KEY = jwtConfig.SECRET_KEY;
+  try {
+    let decoded = jwt.verify(token, SECRET_KEY);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+// Checks if a user's jwt is valid
+exports.validateUser = (req, res) => {
+  const token = req.body.token;
+  if (!token) {
+    res.status(400).send({
+      message: 'No token found'
+    });
+    return;
+  }
+
+  if (verifyToken(token)) {
+    res.send({
+      message: 'ok'
+    });
+    return;
+  } else {
+    res.status(401).send({
+      message: 'User is not authorized'
+    });
+    return;
+  }
+};
