@@ -84,6 +84,8 @@ function verifyToken(token) {
   }
 }
 
+exports.verifyToken = verifyToken;
+
 // Checks if a user's jwt is valid
 exports.validateUser = (req, res) => {
   const token = req.body.token;
