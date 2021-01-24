@@ -225,3 +225,57 @@ exports.getCategory = (req, res) => {
     return;
   })
 };
+
+exports.createPost = (req, res) => {
+  // NOTE (@charkops): Is user authorized for this req ?
+
+  // For now he is
+  // Extract info from body
+  const category_id = req.body.category_id;
+  if (!category_id) {
+    res.status(400).send({
+      message: 'No category_id found in body'
+    });
+    return;
+  }
+
+  const title = req.body.title;
+  if (!title) {
+    res.status(400).send({
+      message: 'No title found in body'
+    });
+    return;
+  }
+
+  const content = req.body.content;
+  if (!content) {
+    res.status(400).send({
+      message: 'No content found in body'
+    });
+    return;
+  }
+
+  // Actually create post
+  // Create post entry
+  db.Posts.create({
+    title,
+    content
+  })
+  .then(post => {
+    if (post) {
+      // Create categoryPost entry
+      // NOTE (@charkops): Should also check for this success
+      db.CategoryPosts.create({
+        category_id,
+        post_id: post.post_id
+      });
+      res.send({ post });
+      return;
+    } else {
+      res.status(500).send({
+        message: 'Could not create post'
+      });
+      return; 
+    }
+  });
+};
