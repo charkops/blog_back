@@ -191,5 +191,37 @@ exports.getAllPosts = async (req, res) => {
     });
     return;
   })
+};
 
+// Returns the category with specific category_id
+exports.getCategory = (req, res) => {
+  // NOTE (@charkops): Is user authorized for this req ?
+  // This req should be available to everybody right ?
+
+  const category_id = req.params.category_id;
+  if (!category_id) {
+    res.status(400).send({
+      message: 'No category_id provided'
+    });
+    return;
+  }
+
+  // Grab category from db
+  db.Categories.findOne({
+    where: { category_id }
+  })
+  .then(category => {
+    res.send({
+      category
+    })
+    return;
+  })
+  .catch(err => {
+    console.log('An error occured while trying to retrieve category from db');
+    console.log(err);
+    res.status(500).send({
+      message: 'An error occured while trying to retrieve category from db'
+    });
+    return;
+  })
 };

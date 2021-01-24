@@ -2,16 +2,17 @@ const jwtcontroller = require('../controllers/jwt.controller');
 const dbcontroller = require('../controllers/db.controller');
 
 module.exports = (app) => {
-  app.get('/users', (req, res) => {
-    res.status(200).send({
-      message: 'Hello ?'
-    });
-  });
+  // app.get('/users', (req, res) => {
+  //   res.status(200).send({
+  //     message: 'Hello ?'
+  //   });
+  // });
 
   app.post('/users/login', jwtcontroller.login);
 
   app.get('/blogs/:blog_id', dbcontroller.getBlog);
 
+  app.get('/categories/:category_id', dbcontroller.getCategory);  
   app.post('/categories', dbcontroller.getCategories);
 
   // Get all post belonging to a specific category
